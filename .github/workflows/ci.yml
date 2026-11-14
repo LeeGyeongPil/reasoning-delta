@@ -1,0 +1,23 @@
+# No key or model needed: tests replay bundled practice-mock fixtures and a local 127.0.0.1 server.
+name: ci
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"   # weekly: catch breakage from dependency or runtime updates
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["22", "24"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
