@@ -1,0 +1,18 @@
+: practice mock - synthesized from documented formats, not a recording of a real server
+: fixture: reasoning-content
+: mimics: DeepSeek-style API and llama.cpp --reasoning-format deepseek: reasoning in delta.reasoning_content
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning_content":"Let me "},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning_content":"add 2 and 2."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"The answer"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":" is 4."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

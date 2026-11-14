@@ -1,0 +1,16 @@
+: practice mock - synthesized from documented formats, not a recording of a real server
+: fixture: literal-tag-in-answer
+: mimics: A model that explains tags in its answer: "<think>" is part of the answer, not a reasoning block
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning_content":"Explain the tag."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"Wrap reasoning in a <thi"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"nk> tag."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

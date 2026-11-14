@@ -1,0 +1,20 @@
+: practice mock - synthesized from documented formats, not a recording of a real server
+: fixture: tool-call-deepseek
+: mimics: DeepSeek thinking mode with a tool call (reasoning_content, then tool_calls)
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning_content":"I need the weather."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning_content":" Call the tool.","content":"Checking."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"get_weather","arguments":""}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"city\":"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"\"Seoul\"}"}}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{},"finish_reason":"tool_calls"}]}
+
+data: [DONE]
+

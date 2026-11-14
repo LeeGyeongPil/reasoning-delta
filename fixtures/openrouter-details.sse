@@ -1,0 +1,18 @@
+: practice mock - synthesized from documented formats, not a recording of a real server
+: fixture: openrouter-details
+: mimics: OpenRouter: delta.reasoning plus delta.reasoning_details blocks that must be sent back unchanged
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning":"Let me ","reasoning_details":[{"type":"reasoning.text","text":"Let me ","index":0,"format":"unknown"}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning":"add 2 and 2.","reasoning_details":[{"type":"reasoning.text","text":"add 2 and 2.","index":1,"format":"unknown"}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"reasoning":"","reasoning_details":[{"type":"reasoning.encrypted","data":"bW9jay1zaWduYXR1cmU=","index":2,"format":"unknown"}]},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"The answer is 4."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

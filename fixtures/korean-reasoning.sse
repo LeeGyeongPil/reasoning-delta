@@ -1,0 +1,16 @@
+: practice mock - synthesized from documented formats, not a recording of a real server
+: fixture: korean-reasoning
+: mimics: Korean reasoning inside <think> tags: multi-byte characters that can be cut inside the SSE bytes
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"<think>2 더하기 2를"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":" 계산해 보자.</think>\n\n"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{"content":"정답은 4입니다."},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-mock","object":"chat.completion.chunk","created":1760000000,"model":"mock-model","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+
+data: [DONE]
+

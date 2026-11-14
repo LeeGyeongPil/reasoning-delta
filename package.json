@@ -1,0 +1,56 @@
+{
+  "name": "reasoning-delta",
+  "version": "0.1.0",
+  "description": "Normalize reasoning streams from OpenAI-compatible servers (reasoning_content, reasoning, <think> tags) into one event stream, and send history back with each server's rules.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeeGyeongPil/reasoning-delta.git"
+  },
+  "homepage": "https://github.com/LeeGyeongPil/reasoning-delta#readme",
+  "bugs": {
+    "url": "https://github.com/LeeGyeongPil/reasoning-delta/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "reasoning-delta": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "fixtures",
+    "README.md",
+    "README.ko.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": ["openai", "llm", "reasoning", "streaming", "deepseek", "vllm", "llama.cpp", "ollama", "openrouter", "think"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "vitest run",
+    "prestart": "npm run build",
+    "start": "node dist/cli.js probe --fixture all --compare",
+    "compare:ai-sdk": "node compare/ai-sdk.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@ai-sdk/openai-compatible": "3.0.92",
+    "@types/node": "22.20.5",
+    "ai": "7.0.173",
+    "openai": "7.57.0",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}

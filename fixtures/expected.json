@@ -1,0 +1,65 @@
+{
+  "reasoning-content": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "reasoning_content",
+    "mimics": "DeepSeek-style API and llama.cpp --reasoning-format deepseek: reasoning in delta.reasoning_content"
+  },
+  "reasoning": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "reasoning",
+    "mimics": "vLLM (current) and OpenRouter plain text: reasoning in delta.reasoning"
+  },
+  "alias-both": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "reasoning_content",
+    "mimics": "A gateway that sends the same reasoning under both delta.reasoning_content and delta.reasoning"
+  },
+  "think-tag-split": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "think_tag",
+    "mimics": "llama.cpp --reasoning-format none: <think> tags in content, tags cut across chunks"
+  },
+  "think-open-omitted": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "think_tag",
+    "options": {
+      "startInReasoning": true
+    },
+    "mimics": "Chat templates that put <think> into the prompt: the stream only has the closing tag"
+  },
+  "legacy-both": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "legacy_both",
+    "mimics": "llama.cpp --reasoning-format deepseek-legacy: <think> stays in content AND reasoning_content is filled"
+  },
+  "literal-tag-in-answer": {
+    "reasoning": "Explain the tag.",
+    "text": "Wrap reasoning in a <think> tag.",
+    "dialect": "reasoning_content",
+    "mimics": "A model that explains tags in its answer: \"<think>\" is part of the answer, not a reasoning block"
+  },
+  "tool-call-deepseek": {
+    "reasoning": "I need the weather. Call the tool.",
+    "text": "Checking.",
+    "dialect": "reasoning_content",
+    "mimics": "DeepSeek thinking mode with a tool call (reasoning_content, then tool_calls)"
+  },
+  "openrouter-details": {
+    "reasoning": "Let me add 2 and 2.",
+    "text": "The answer is 4.",
+    "dialect": "reasoning",
+    "mimics": "OpenRouter: delta.reasoning plus delta.reasoning_details blocks that must be sent back unchanged"
+  },
+  "korean-reasoning": {
+    "reasoning": "2 더하기 2를 계산해 보자.",
+    "text": "정답은 4입니다.",
+    "dialect": "think_tag",
+    "mimics": "Korean reasoning inside <think> tags: multi-byte characters that can be cut inside the SSE bytes"
+  }
+}
