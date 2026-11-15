@@ -184,6 +184,8 @@ export async function probeReal(opts: RealRunOptions): Promise<ProbeResult> {
     return await measure(opts.model, 'real', fromSSE(res.body), options, undefined, opts.compare);
   } catch (err) {
     if (signal.aborted) throw new ProbeError('timeout', { seconds: opts.timeoutSeconds });
-    throw new ProbeError('stream', { detail: err instanceof Error ? err.message : String(err) });
+    const type = res.headers.get('content-type') ?? 'unknown';
+    const message = err instanceof Error ? err.message : String(err);
+    throw new ProbeError('stream', { detail: '(content-type: ' + type + ') ' + message });
   }
 }

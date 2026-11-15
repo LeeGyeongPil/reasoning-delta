@@ -42,6 +42,9 @@ export async function* fromSSE(body: ByteSource): AsyncGenerator<ChunkLike, void
   const decoder = new TextDecoder('utf-8');
   let text = '';
   let data: string[] = [];
+  let sawData = false;
+  // Start of any non-comment content, kept to describe a body that is not SSE.
+  let stray = '';
 
   // Returns the parsed chunk, `null` for [DONE], or `undefined` when there is no data.
   const dispatch = (): ChunkLike | null | undefined => {
@@ -59,9 +62,11 @@ export async function* fromSSE(body: ByteSource): AsyncGenerator<ChunkLike, void
   const handleLine = (line: string): ChunkLike | null | undefined => {
     if (line === '') return dispatch();
     if (line.startsWith(':')) return undefined;
+    if (stray.length < 120 && line.trim() !== '') stray += (stray === '' ? '' : '\n') + line;
     const colon = line.indexOf(':');
     const field = colon === -1 ? line : line.slice(0, colon);
     if (field !== 'data') return undefined;
+    sawData = true;
     let value = colon === -1 ? '' : line.slice(colon + 1);
     if (value.startsWith(' ')) value = value.slice(1);
     data.push(value);
@@ -90,4 +95,6 @@ export async function* fromSSE(body: ByteSource): AsyncGenerator<ChunkLike, void
   }
   const last = dispatch();
   if (last !== undefined && last !== null) yield last;
+  // Content but no data field at all: an HTML error page or a non-streamed JSON reply.
+  if (!sawData && stray !== '') throw new SSEParseError(stray, undefined, true);
 }
