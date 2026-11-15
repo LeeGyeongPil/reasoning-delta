@@ -93,7 +93,7 @@ Everything below is exported from `reasoning-delta`.
 | Name | What it does | Main arguments | Returns |
 |---|---|---|---|
 | `normalizeReasoning(source, options?)` | Turns chunks into events. Accepts the openai SDK `Stream`, any async iterable of chunk objects, or `fromSSE(...)`. | `source`, `NormalizeOptions` | `AsyncGenerator<ReasoningEvent>` |
-| `fromSSE(body)` | Parses a Server-Sent Events body (handles `\n`, `\r\n`, `\r`, comments, multi-line `data:`, `[DONE]`, UTF-8 cut across byte chunks). Throws `SSEParseError` on bad JSON. | `ReadableStream`, async iterable, iterable or string | `AsyncGenerator<ChunkLike>` |
+| `fromSSE(body)` | Parses a Server-Sent Events body (handles `\n`, `\r\n`, `\r`, comments, multi-line `data:`, `[DONE]`, UTF-8 cut across byte chunks). Throws `SSEParseError` on bad JSON or on a body with no SSE events (for example an HTML error page). | `ReadableStream`, async iterable, iterable or string | `AsyncGenerator<ChunkLike>` |
 | `collect(events)` | Drains events into one turn. | event stream | `Promise<AssistantTurn>` (`content`, `reasoning`, `reasoningDetails`, `toolCalls`, `finishReason`, `dialect`, `warnings`, `usage`) |
 | `toAssistantMessage(turn)` | Makes a history message from a collected turn. | `AssistantTurn` | `MessageLike` |
 | `normalizeMessage(message, options?)` | Same splitting for a complete (non-streaming) message. | message, `NormalizeOptions` | `{ content, reasoning, dialect }` |
@@ -258,7 +258,7 @@ A repro script is included for one specific case: `npm run compare:ai-sdk` repla
 
 The ten fixtures in [`fixtures/`](fixtures) are **synthesized from documented formats, not recordings of real servers**. Each file says so on its first lines and says which server it mimics. The CLI's mock mode prints the same notice. "Practice mock mode" means: no network, no key, deterministic output. Real mode talks to a real server, which depends on that server's speed and model.
 
-- Covered by the 90 automated tests: all fixtures, random chunk splits, a real openai SDK client streaming from a local `127.0.0.1` mock server, the CLI in both languages, the packed tarball (ESM import, CJS `require`, `npx reasoning-delta --version`).
+- Covered by the 93 automated tests: all fixtures, random chunk splits, a real openai SDK client streaming from a local `127.0.0.1` mock server, the CLI in both languages, the packed tarball (ESM import, CJS `require`, `npx reasoning-delta --version`).
 - **Not yet verified against live servers:** llama.cpp, vLLM, Ollama, DeepSeek and OpenRouter endpoints were not called. Real-mode `probe` was exercised only against the local mock server. Send-back rules marked unconfirmed above are not confirmed by the server docs.
 
 ## Troubleshooting
@@ -268,7 +268,7 @@ The ten fixtures in [`fixtures/`](fixtures) are **synthesized from documented fo
 | The answer starts with text up to `</think>` and the reasoning is empty; warning `stray-close-tag` | The chat template adds `<think>` to the prompt, so the stream has only the closing tag | `normalizeReasoning(stream, { startInReasoning: true })` or `probe --start-in-reasoning` |
 | A literal `<think>` stays in the answer | Default `tagMode: 'leading'` only treats a tag as reasoning before the first visible answer character | Set `tagMode: 'anywhere'` if your model really emits reasoning later |
 | `done.dialect` is `none` | The server sent no reasoning, or reasoning is switched off for that request | Check the request's reasoning/thinking parameter for that server |
-| `SSEParseError` | The body is not a `stream: true` Chat Completions stream (an error page, for example) | Check the status code and request body before parsing |
+| `SSEParseError` | The body is not a `stream: true` Chat Completions stream (an error page, or a body with no SSE events) | Check the status code and request body before parsing |
 | `StreamError` | The server sent an `error` object inside the stream | Read `error.detail` |
 | `UnknownProfileError` | Typo in a profile name | Use one of the names in `profiles`, or `defineProfile()` |
 
@@ -289,7 +289,7 @@ Follows [SemVer](https://semver.org/). While the version is 0.x, a minor release
 
 ```bash
 npm install
-npm test        # builds, then runs 10 test files / 90 tests
+npm test        # builds, then runs 10 test files / 93 tests
 npm run build   # tsc
 npm run compare:ai-sdk
 ```

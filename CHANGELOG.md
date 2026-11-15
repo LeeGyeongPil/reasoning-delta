@@ -4,7 +4,10 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1] - 2026-11-15
+
+### Fixed
+- `fromSSE()` now throws `SSEParseError` for a body with content but no `data:` events (HTML error page, non-streamed JSON), so `probe` exits with 1 and shows the content-type instead of recommending `strict`.
 
 ## [0.1.0] - 2026-11-14
 

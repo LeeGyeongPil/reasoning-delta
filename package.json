@@ -1,6 +1,6 @@
 {
   "name": "reasoning-delta",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Normalize reasoning streams from OpenAI-compatible servers (reasoning_content, reasoning, <think> tags) into one event stream, and send history back with each server's rules.",
   "license": "MIT",
   "repository": {

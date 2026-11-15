@@ -93,7 +93,7 @@ flowchart LR
 | 이름 | 하는 일 | 주요 인자 | 반환 |
 |---|---|---|---|
 | `normalizeReasoning(source, options?)` | 청크를 이벤트로 바꿉니다. openai SDK `Stream`, 청크 객체의 비동기 iterable, `fromSSE(...)` 를 받습니다. | `source`, `NormalizeOptions` | `AsyncGenerator<ReasoningEvent>` |
-| `fromSSE(body)` | Server-Sent Events 본문을 파싱합니다(`\n`·`\r\n`·`\r`, 주석 줄, 여러 줄 `data:`, `[DONE]`, 바이트 청크에 걸친 UTF-8 처리). JSON 이 틀리면 `SSEParseError`. | `ReadableStream`, 비동기 iterable, iterable, 문자열 | `AsyncGenerator<ChunkLike>` |
+| `fromSSE(body)` | Server-Sent Events 본문을 파싱합니다(`\n`·`\r\n`·`\r`, 주석 줄, 여러 줄 `data:`, `[DONE]`, 바이트 청크에 걸친 UTF-8 처리). JSON 이 틀리거나 SSE 이벤트가 없는 본문(예: HTML 오류 페이지)이면 `SSEParseError`. | `ReadableStream`, 비동기 iterable, iterable, 문자열 | `AsyncGenerator<ChunkLike>` |
 | `collect(events)` | 이벤트를 모아 한 턴으로 만듭니다. | 이벤트 스트림 | `Promise<AssistantTurn>` (`content`, `reasoning`, `reasoningDetails`, `toolCalls`, `finishReason`, `dialect`, `warnings`, `usage`) |
 | `toAssistantMessage(turn)` | 수집한 턴으로 기록용 메시지를 만듭니다. | `AssistantTurn` | `MessageLike` |
 | `normalizeMessage(message, options?)` | 완성된(스트리밍 아닌) 메시지에 같은 분리를 적용합니다. | 메시지, `NormalizeOptions` | `{ content, reasoning, dialect }` |
@@ -258,7 +258,7 @@ const messages = toServerMessages(history, mine);
 
 [`fixtures/`](fixtures) 의 픽스처 10개는 **문서화된 형식으로 합성한 것이며 실제 서버를 녹화한 것이 아닙니다.** 각 파일 첫 줄에 그렇게 적혀 있고 어느 서버를 흉내 냈는지도 적혀 있습니다. CLI 의 목 모드도 같은 안내를 출력합니다. "연습용 목(mock) 모드"는 네트워크·키 없이 항상 같은 출력이 나오는 모드이고, 실제 모드는 실제 서버를 부르므로 그 서버의 속도와 모델에 좌우됩니다.
 
-- 자동 테스트 90개가 다루는 것: 모든 픽스처, 무작위 청크 분할, 로컬 `127.0.0.1` 목 서버에서 스트리밍하는 실제 openai SDK 클라이언트, 두 언어의 CLI, 패킹한 tarball(ESM import, CJS `require`, `npx reasoning-delta --version`).
+- 자동 테스트 93개가 다루는 것: 모든 픽스처, 무작위 청크 분할, 로컬 `127.0.0.1` 목 서버에서 스트리밍하는 실제 openai SDK 클라이언트, 두 언어의 CLI, 패킹한 tarball(ESM import, CJS `require`, `npx reasoning-delta --version`).
 - **아직 실제 서버로 확인하지 않은 것:** llama.cpp, vLLM, Ollama, DeepSeek, OpenRouter 엔드포인트는 호출하지 않았습니다. 실제 모드 `probe` 는 로컬 목 서버로만 시험했습니다. 위 표에서 미확인으로 표시한 되돌려 보내기 규칙은 서버 문서로 확인되지 않았습니다.
 
 ## 문제 해결
@@ -268,7 +268,7 @@ const messages = toServerMessages(history, mine);
 | 답이 `</think>` 앞까지의 글로 시작하고 추론이 비어 있음, 경고 `stray-close-tag` | 채팅 템플릿이 프롬프트에 `<think>` 를 넣어서 스트림에는 닫는 태그만 있음 | `normalizeReasoning(stream, { startInReasoning: true })` 또는 `probe --start-in-reasoning` |
 | 글자 그대로의 `<think>` 가 답에 남음 | 기본 `tagMode: 'leading'` 은 첫 답 글자 앞에서만 태그를 추론으로 봄 | 모델이 정말 나중에 추론을 내보낸다면 `tagMode: 'anywhere'` |
 | `done.dialect` 가 `none` | 서버가 추론을 보내지 않았거나 그 요청에서 추론이 꺼져 있음 | 해당 서버의 추론·thinking 요청 파라미터 확인 |
-| `SSEParseError` | 본문이 `stream: true` Chat Completions 스트림이 아님(예: 오류 페이지) | 파싱 전에 상태 코드와 요청 본문 확인 |
+| `SSEParseError` | 본문이 `stream: true` Chat Completions 스트림이 아님(예: 오류 페이지, SSE 이벤트가 없는 본문) | 파싱 전에 상태 코드와 요청 본문 확인 |
 | `StreamError` | 서버가 스트림 안에 `error` 객체를 보냄 | `error.detail` 확인 |
 | `UnknownProfileError` | 프로필 이름 오타 | `profiles` 의 이름을 쓰거나 `defineProfile()` 사용 |
 
@@ -289,7 +289,7 @@ REASONING_DELTA_LANG=ko npx reasoning-delta probe --fixture all --compare
 
 ```bash
 npm install
-npm test        # 빌드 후 테스트 파일 10개 / 테스트 90개 실행
+npm test        # 빌드 후 테스트 파일 10개 / 테스트 93개 실행
 npm run build   # tsc
 npm run compare:ai-sdk
 ```
