@@ -1,6 +1,8 @@
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { describe, expect, it } from 'vitest';
 import { main } from '../src/cli/main.js';
 import { startMockServer } from './helpers/mock-server.js';
@@ -90,6 +92,27 @@ describe('probe CLI in real mode against a local server', () => {
       expect(r.out).toContain('first reasoning:');
     } finally {
       await server.close();
+    }
+  });
+
+  it('rejects a 200 text/html body with exit code 1 and no recommendation', async () => {
+    const server = createServer((req, res) => {
+      req.resume();
+      req.on('end', () => res.writeHead(200, { 'content-type': 'text/html' }).end('<html>proxy</html>'));
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const port = (server.address() as AddressInfo).port;
+    try {
+      const r = await cli(['probe', '--base-url', 'http://127.0.0.1:' + port + '/v1', '--model', 'm', '--lang', 'en']);
+      expect(r.code).toBe(1);
+      expect(r.err).toContain('text/html');
+      expect(r.err).toContain('<html>proxy</html>');
+      expect(r.out).not.toContain('recommended profile');
+    } finally {
+      await new Promise<void>((resolve) => {
+        server.close(() => resolve());
+        server.closeAllConnections();
+      });
     }
   });
 

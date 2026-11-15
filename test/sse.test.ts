@@ -8,6 +8,18 @@ async function all(body: Parameters<typeof fromSSE>[0]) {
 }
 
 describe('fromSSE', () => {
+  it('rejects bodies that contain no SSE data events', async () => {
+    await expect(all('<html>502 Bad Gateway</html>')).rejects.toBeInstanceOf(SSEParseError);
+    await expect(all('{"object":"chat.completion","choices":[]}')).rejects.toBeInstanceOf(SSEParseError);
+    await expect(all('<html>502 Bad Gateway</html>')).rejects.toThrow(/502 Bad Gateway/);
+  });
+
+  it('keeps empty, comment-only and [DONE]-only bodies as empty streams', async () => {
+    expect(await all('')).toEqual([]);
+    expect(await all(': keep-alive\n\n  \n')).toEqual([]);
+    expect(await all('data: [DONE]\n\n')).toEqual([]);
+  });
+
   it('handles CRLF, comments, multi-line data and [DONE]', async () => {
     const text =
       ': comment\r\n\r\ndata: {"a":\r\ndata: 1}\r\n\r\nevent: x\r\ndata: {"b":2}\r\n\r\ndata: [DONE]\r\n\r\ndata: {"c":3}\r\n\r\n';
