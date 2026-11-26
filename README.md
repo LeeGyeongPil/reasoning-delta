@@ -125,6 +125,8 @@ Events:
 | `startInReasoning` | `false` | The opening tag is missing (some chat templates put it in the prompt); the stream starts inside reasoning. |
 | `choiceIndex` | `0` | Which choice to follow. |
 
+`startInReasoning` is safe to combine with servers that send reasoning in the `reasoning_content` / `reasoning` field (when that reasoning arrives before or together with the first content): the answer is still emitted as `text`.
+
 Warnings in `done.warnings`: `stray-close-tag` (a closing tag without an opening one; kept as text), `unclosed-tag` (stream ended inside a tag; held text flushed as reasoning), `alias-mismatch` (`reasoning_content` and `reasoning` differ in one chunk; `reasoning_content` is used).
 
 ## Usage examples
@@ -258,7 +260,7 @@ A repro script is included for one specific case: `npm run compare:ai-sdk` repla
 
 The ten fixtures in [`fixtures/`](fixtures) are **synthesized from documented formats, not recordings of real servers**. Each file says so on its first lines and says which server it mimics. The CLI's mock mode prints the same notice. "Practice mock mode" means: no network, no key, deterministic output. Real mode talks to a real server, which depends on that server's speed and model.
 
-- Covered by the 93 automated tests: all fixtures, random chunk splits, a real openai SDK client streaming from a local `127.0.0.1` mock server, the CLI in both languages, the packed tarball (ESM import, CJS `require`, `npx reasoning-delta --version`).
+- Covered by the 96 automated tests: all fixtures, random chunk splits, a real openai SDK client streaming from a local `127.0.0.1` mock server, the CLI in both languages, the packed tarball (ESM import, CJS `require`, `npx reasoning-delta --version`).
 - **Not yet verified against live servers:** llama.cpp, vLLM, Ollama, DeepSeek and OpenRouter endpoints were not called. Real-mode `probe` was exercised only against the local mock server. Send-back rules marked unconfirmed above are not confirmed by the server docs.
 
 ## Troubleshooting
@@ -283,13 +285,13 @@ REASONING_DELTA_LANG=ko npx reasoning-delta probe --fixture all --compare
 
 ## Versions
 
-Follows [SemVer](https://semver.org/). While the version is 0.x, a minor release may change the API; changes are listed in [CHANGELOG.md](CHANGELOG.md). Current version: 0.1.0.
+Follows [SemVer](https://semver.org/). While the version is 0.x, a minor release may change the API; changes are listed in [CHANGELOG.md](CHANGELOG.md). Current version: 0.1.2.
 
 ## Development
 
 ```bash
 npm install
-npm test        # builds, then runs 10 test files / 93 tests
+npm test        # builds, then runs 11 test files / 96 tests
 npm run build   # tsc
 npm run compare:ai-sdk
 ```

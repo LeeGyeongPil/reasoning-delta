@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-11-27
+
+### Fixed
+- `startInReasoning` (and `probe --start-in-reasoning`) no longer drops the answer when the server sends reasoning in the `reasoning_content` / `reasoning` field: the implicit reasoning block is cancelled once field reasoning is seen before any content, so the answer is emitted as `text` and the dialect is reported correctly.
+
 ## [0.1.1] - 2026-11-15
 
 ### Fixed

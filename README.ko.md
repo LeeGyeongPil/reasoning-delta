@@ -125,6 +125,8 @@ flowchart LR
 | `startInReasoning` | `false` | 여는 태그가 없는 경우(일부 채팅 템플릿이 프롬프트에 넣음). 스트림이 추론 안에서 시작합니다. |
 | `choiceIndex` | `0` | 따라갈 choice 번호. |
 
+`startInReasoning` 는 `reasoning_content` / `reasoning` 필드로 추론을 보내는 서버와 함께 써도 안전합니다(필드 추론이 첫 content 보다 먼저 또는 함께 올 때). 답은 그대로 `text` 로 나옵니다.
+
 `done.warnings` 의 경고: `stray-close-tag`(여는 태그 없이 닫는 태그, 글자로 남김), `unclosed-tag`(태그가 열린 채 스트림 종료, 쥐고 있던 글을 추론으로 내보냄), `alias-mismatch`(한 청크에서 `reasoning_content` 와 `reasoning` 이 다름, `reasoning_content` 채택).
 
 ## 사용 예
@@ -258,7 +260,7 @@ const messages = toServerMessages(history, mine);
 
 [`fixtures/`](fixtures) 의 픽스처 10개는 **문서화된 형식으로 합성한 것이며 실제 서버를 녹화한 것이 아닙니다.** 각 파일 첫 줄에 그렇게 적혀 있고 어느 서버를 흉내 냈는지도 적혀 있습니다. CLI 의 목 모드도 같은 안내를 출력합니다. "연습용 목(mock) 모드"는 네트워크·키 없이 항상 같은 출력이 나오는 모드이고, 실제 모드는 실제 서버를 부르므로 그 서버의 속도와 모델에 좌우됩니다.
 
-- 자동 테스트 93개가 다루는 것: 모든 픽스처, 무작위 청크 분할, 로컬 `127.0.0.1` 목 서버에서 스트리밍하는 실제 openai SDK 클라이언트, 두 언어의 CLI, 패킹한 tarball(ESM import, CJS `require`, `npx reasoning-delta --version`).
+- 자동 테스트 96개가 다루는 것: 모든 픽스처, 무작위 청크 분할, 로컬 `127.0.0.1` 목 서버에서 스트리밍하는 실제 openai SDK 클라이언트, 두 언어의 CLI, 패킹한 tarball(ESM import, CJS `require`, `npx reasoning-delta --version`).
 - **아직 실제 서버로 확인하지 않은 것:** llama.cpp, vLLM, Ollama, DeepSeek, OpenRouter 엔드포인트는 호출하지 않았습니다. 실제 모드 `probe` 는 로컬 목 서버로만 시험했습니다. 위 표에서 미확인으로 표시한 되돌려 보내기 규칙은 서버 문서로 확인되지 않았습니다.
 
 ## 문제 해결
@@ -283,13 +285,13 @@ REASONING_DELTA_LANG=ko npx reasoning-delta probe --fixture all --compare
 
 ## 버전
 
-[유의적 버전(SemVer)](https://semver.org/lang/ko/)을 따릅니다. 0.x 동안은 마이너 버전에서 API 가 바뀔 수 있고, 바뀌면 [CHANGELOG.md](CHANGELOG.md) 에 적습니다. 현재 버전: 0.1.0.
+[유의적 버전(SemVer)](https://semver.org/lang/ko/)을 따릅니다. 0.x 동안은 마이너 버전에서 API 가 바뀔 수 있고, 바뀌면 [CHANGELOG.md](CHANGELOG.md) 에 적습니다. 현재 버전: 0.1.2.
 
 ## 개발
 
 ```bash
 npm install
-npm test        # 빌드 후 테스트 파일 10개 / 테스트 93개 실행
+npm test        # 빌드 후 테스트 파일 11개 / 테스트 96개 실행
 npm run build   # tsc
 npm run compare:ai-sdk
 ```
