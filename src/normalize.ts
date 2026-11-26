@@ -71,6 +71,7 @@ class Normalizer {
       fieldText = rs;
       this.field ??= 'reasoning';
     }
+    if (fieldText) this.splitter.cancelImplicitStart();
     if (fieldText) out.push({ type: 'reasoning', text: fieldText, source: 'field' });
 
     if (Array.isArray(delta.reasoning_details) && delta.reasoning_details.length > 0) {

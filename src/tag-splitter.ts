@@ -33,6 +33,7 @@ export class TagSplitter {
   private trimNext = false;
   private found = false;
   private total = 0;
+  private implicitStart = false;
 
   constructor(options: TagSplitterOptions = {}) {
     const names = options.tags ?? DEFAULT_TAGS;
@@ -41,12 +42,24 @@ export class TagSplitter {
     this.closeTags = names.map((n) => '</' + n + '>');
     this.closeTargets = this.closeTags;
     this.phase = options.startInReasoning === true && this.mode !== 'off' ? 'reasoning' : 'start';
+    this.implicitStart = this.phase === 'reasoning';
     if (this.mode === 'anywhere' && this.phase === 'start') this.phase = 'text';
   }
 
   /** True once a reasoning block was opened (or closed) in this stream. */
   get foundReasoning(): boolean {
     return this.found;
+  }
+
+  /**
+   * Cancel the implicit reasoning block opened by `startInReasoning`, if no content was pushed yet.
+   * Used when reasoning arrives in a separate field: the content is then the answer, and a real
+   * leading tag (a legacy duplicate copy) is still detected normally.
+   */
+  cancelImplicitStart(): void {
+    if (!this.implicitStart || this.total > 0 || this.phase !== 'reasoning') return;
+    this.implicitStart = false;
+    this.phase = this.mode === 'anywhere' ? 'text' : 'start';
   }
 
   /** Feed the next piece of `content`. Returns what can be decided now. */
